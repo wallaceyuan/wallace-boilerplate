@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './style.css'
+import Icon from './icon.jpg';
 
 export default class IndexPage extends React.Component {
     constructor(props) {
@@ -8,7 +9,8 @@ export default class IndexPage extends React.Component {
     render() {
         return(
             <div className="demo">
-                <p>Hello,This is created By wallaceYuan Love ZL</p>
+                <img src={Icon} width="100"/>
+                <p>Hello,This is created By wallaceYuan,</p>
             </div>
         )
     }

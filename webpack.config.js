@@ -2,13 +2,17 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-//const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
-var env = process.env.WEBPACK_ENV;
+var env = process.env.NODE_ENV;
+
+console.log('env',env)
+
+
 var outputFile;
 var plugins = [
-    //new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(['dist']),
     new ExtractTextPlugin("styles.css"),
     new HtmlWebpackPlugin({
         title: 'React Biolerplate by YuanYuan',
@@ -17,8 +21,10 @@ var plugins = [
     new webpack.HotModuleReplacementPlugin(), // 热替换插件
     new webpack.NamedModulesPlugin() // 执行热替换时打印模块名字
 ]
-if (env === 'build') {
-    plugins.push(new UglifyJSPlugin());
+if (env === 'production') {
+    plugins.push(new UglifyJSPlugin({
+        sourceMap: true
+    }));
     outputFile = 'bundle.min.js';
 } else {
     outputFile = 'bundle.js';
@@ -30,11 +36,12 @@ module.exports = {
         'react-hot-loader/patch', // 激活HMR
         path.resolve(__dirname, './app/index.js')
     ],
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     devServer: {
         contentBase:'./dist',
         publicPath: '/',
         port: 8080,
+        hot:true,
         historyApiFallback: true
     },
     module: {
@@ -60,6 +67,10 @@ module.exports = {
                     use: ["style-loader","css-loader","sass-loader"],
                     publicPath: "/dist"
                 })
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: ['file-loader']
             }
         ]
     },
